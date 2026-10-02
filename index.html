@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Who's Mika</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Figtree:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="bar"></div>
+    <main id="app"></main>
+    <footer id="footer"></footer>
+    <nav id="dock" aria-label="Main">
+      <a href="#home"><i>🏠</i>Home</a><a href="#about"><i>👤</i>About</a
+      ><a href="#projects"><i>💼</i>Work</a
+      ><a href="#gallery"><i>📸</i>Gallery</a
+      ><a href="#contact"><i>✉️</i>Contact</a>
+    </nav>
+
+    <script>
+      /* =====================================================================
+   ✏️ EDIT YOUR DETAILS HERE — the only part you need to change.
+   IMAGES (for GitHub): put files in an "images" folder and use paths
+   like  photo: "images/me.jpg"  and  image: "images/project1.png".
+   Tip: open index.html on your computer to get "Change photo" buttons
+   (or add #edit to the web address) for a quick preview upload.
+   ===================================================================== */
+      const PROFILE = {
+        name: "Mika",
+        tabTitle: "Miks | Portfolio", // text shown on the browser tab
+        title:
+          "BS  of Science in Information Technology with specialization in Multimedia Arts and Animation",
+        welcome:
+          "Hi, I'm Mika! A IT student who likes turning ideas into creative and functional digital projects. I'm always learning, creating, and trying something new. Have a look around.",
+        photo: "2x2.jpg",
+        info: {
+          "Full name": "Mikaella D. Marzado",
+          Age: "20",
+          Location: "Quezon City, PH",
+          Languages: "English, Filipino",
+        },
+        education: [
+          {
+            school: "National University Manila",
+            level: "College",
+            detail: "BS Information Technology",
+            years: "2024 – Present",
+          },
+          {
+            school: "Siena College of Quezon City",
+            level: "Senior High",
+            detail: "STEM Strand",
+            years: "2021 – 2024",
+          },
+        ],
+        skills: ["HTML", "CSS", "JavaScript", "Java"],
+        interests: ["Exploring", "Eating", "Photography", "Coffee"],
+        projects: [
+          // type: "web" | "app" | "achievement". Add more lines for more projects.
+          {
+            type: "web",
+            title: "Basic Website",
+            description: "This project was our group project for Web Systems and Technologies, where I developed a basic e-commerce website using HTML, CSS, and JavaScript. I handled the coding and front-end development, focusing on creating a clean, responsive, and user-friendly interface. My classmate helped edit and create the product images used on the website during our 2nd year, 3rd term. I’m grateful for his help in making the visuals more complete and polished.",
+            tech: ["HTML", "CSS", "JavaScript"],
+            link: "https://aikamiks.github.io/Singkamas/",
+            image: "singka.png",
+          },
+        ],
+        fun: {
+          // the "Fun" tab in Get to Know Me. Make these about YOU!
+          favorites: {
+            "Go-to drink": "Caramel Macchiato",
+            "Comfort food": "Pancakes, Kutchinta, and Cookies",
+            "Dream trip": "Switzerland",
+            "Favorite Series": "From and Taxi Driver",
+          },
+          photos: [
+            // photo cards. Add a picture with image: "img/snap1.jpg". Add or delete lines freely.
+            { caption: "Cafe day", image: "CD.jpg" },
+            { caption: "With friends", image: "WF.jpg" },
+            { caption: "Favorite view", image: "FV.jpg" },
+            { caption: "Good food", image: "GF.jpg" },
+            { caption: "Random moment", image: "RM.jpg" },
+            { caption: "Core memory", image: "core.jpg" },
+          ],
+        },
+        hobbies: [
+          // your gallery: 8 slots. Add a photo with image: "img/photo1.jpg" (the icon shows until you do). Add or delete lines freely.
+          {
+            title: "Photography",
+            caption: "Catching small moments.",
+            image: "photog.png",
+            icon: "📷",
+          },
+          {
+            title: "Exploring",
+            caption: "New places, new stories.",
+            image: "explore1.jpg",
+            icon: "🧭",
+          },
+          {
+            title: "Travel",
+            caption: "Collecting places, one trip at a time.",
+            image: "travel.jpg",
+            icon: "✈️",
+          },
+          {
+            title: "Music",
+            caption: "Playlists for every mood.",
+            image: "music.jpg",
+            link: "https://open.spotify.com/playlist/7FzbtaQ4o4VSwei1V9Bf89?si=e151f254f5b04eda",
+            icon: "🎧",
+          },
+        ],
+        contact: {
+          email: "mkllmarzado@gmail.com",
+          phone: "+63 939 162 2135",
+          location: "Quezon City, Philippines",
+        },
+      };
+
+      /* ===================== HELPERS ===================== */
+      const $ = (s, r = document) => r.querySelector(s);
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ===================== OOP: PEOPLE ===================== */
+      /** ENCAPSULATION: private #fields, read through getters only. */
+      class Person {
+        #name;
+        #title;
+        constructor(name, title) {
+          this.#name = name;
+          this.#title = title;
+        }
+        get name() {
+          return this.#name;
+        }
+        get title() {
+          return this.#title;
+        }
+        get initials() {
+          const w = this.#name.split(" ");
+          return (w[0][0] + w[w.length - 1][0]).toUpperCase();
+        }
+        describe() {
+          return `${this.#name} — ${this.#title}`;
+        }
+      }
+      /** INHERITANCE: Student extends Person. POLYMORPHISM: overrides describe(). */
+      class Student extends Person {
+        #education;
+        constructor(name, title, education) {
+          super(name, title);
+          this.#education = education;
+        }
+        get education() {
+          return this.#education;
+        }
+        describe() {
+          return `${super.describe()} at ${this.#education[0]?.school ?? "university"}`;
+        }
+      }
+
+      /* ===================== OOP: PROJECTS ===================== */
+      /** Base class. Subclasses override icon(), badge() and kind (polymorphism). */
+      class Project {
+        #title;
+        #description;
+        constructor(
+          { title, description, tech = [], link = "", image = "" },
+          key,
+        ) {
+          this.#title = title;
+          this.#description = description;
+          this.tech = tech;
+          this.link = link;
+          this.image = image;
+          this.key = key;
+        }
+        get title() {
+          return this.#title;
+        }
+        get description() {
+          return this.#description;
+        }
+        icon() {
+          return "📁";
+        }
+        badge() {
+          return "Project";
+        }
+        /** A two-sided card: tap to flip. */
+        render() {
+          const src = ImageStore.get(this.key) || this.image;
+          return `<div class="card" tabindex="0" role="button" aria-label="${esc(this.title)}. Press to flip card.">
+      <div class="inner">
+        <div class="face front"><div class="pic">${src ? `<img src="${esc(src)}" alt="">` : this.icon()}<button class="upload" data-upload="${this.key}" data-w="900">Change image</button></div>
+          <div class="cap"><span class="badge">${this.badge()}</span><h3>${esc(this.title)}</h3><div class="flip">Tap to flip ↻</div></div></div>
+        <div class="face back"><h3>${esc(this.title)}</h3><p>${esc(this.description)}</p>
+          <div class="tags">${this.tech.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+          ${this.link ? `<a href="${esc(this.link)}" target="_blank" rel="noopener">View project</a>` : ""}</div>
+      </div></div>`;
+        }
+      }
+      class WebProject extends Project {
+        icon() {
+          return "🌐";
+        }
+        badge() {
+          return "Web";
+        }
+      }
+      class AppProject extends Project {
+        icon() {
+          return "💻";
+        }
+        badge() {
+          return "App";
+        }
+      }
+      class Achievement extends Project {
+        icon() {
+          return "🏆";
+        }
+        badge() {
+          return "Achievement";
+        }
+      }
+      const PROJECT_TYPES = {
+        web: WebProject,
+        app: AppProject,
+        achievement: Achievement,
+      };
+
+      /* ===================== OOP: UTILITIES ===================== */
+      /** Saves images picked in edit mode (resized to stay small). */
+      class ImageStore {
+        static get(k) {
+          try {
+            return localStorage.getItem("img:" + k);
+          } catch {
+            return null;
+          }
+        }
+        static set(k, d) {
+          try {
+            localStorage.setItem("img:" + k, d);
+          } catch {
+            alert("Image too large. Try a smaller one.");
+          }
+        }
+        static pick(maxW) {
+          return new Promise((res) => {
+            const inp = Object.assign(document.createElement("input"), {
+              type: "file",
+              accept: "image/*",
+            });
+            inp.onchange = () => {
+              const fr = new FileReader();
+              fr.onload = () => {
+                const img = new Image();
+                img.onload = () => {
+                  const s = Math.min(1, maxW / img.width),
+                    c = document.createElement("canvas");
+                  c.width = img.width * s;
+                  c.height = img.height * s;
+                  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+                  res(c.toDataURL("image/jpeg", 0.85));
+                };
+                img.src = fr.result;
+              };
+              if (inp.files[0]) fr.readAsDataURL(inp.files[0]);
+            };
+            inp.click();
+          });
+        }
+      }
+
+      /** Validation rules per field: [test, error message]. */
+      class FormValidator {
+        #rules;
+        constructor(rules) {
+          this.#rules = rules;
+        }
+        check(field, v) {
+          for (const [ok, msg] of this.#rules[field] || [])
+            if (!ok(v.trim())) return msg;
+          return "";
+        }
+      }
+
+      /** Types words one letter at a time on the home screen. */
+      class Typewriter {
+        constructor(el, words) {
+          Object.assign(this, { el, words, i: 0, n: 0, del: false });
+          this.tick();
+        }
+        tick() {
+          const w = this.words[this.i];
+          let t = this.del ? 35 : 75;
+          this.n += this.del ? -1 : 1;
+          this.el.textContent = w.slice(0, this.n);
+          if (!this.del && this.n === w.length) {
+            this.del = true;
+            t = 1400;
+          } else if (this.del && this.n === 0) {
+            this.del = false;
+            this.i = (this.i + 1) % this.words.length;
+            t = 300;
+          }
+          this.timer = setTimeout(() => this.tick(), t);
+        }
+        stop() {
+          clearTimeout(this.timer);
+        }
+      }
+
+      /** Confetti burst for the "message sent" moment. */
+      class Confetti {
+        static burst() {
+          const c = Object.assign(document.createElement("canvas"), {
+            width: innerWidth,
+            height: innerHeight,
+          });
+          c.style.cssText =
+            "position:fixed;inset:0;pointer-events:none;z-index:60";
+          document.body.append(c);
+          const x = c.getContext("2d"),
+            cols = ["#a9bfb4", "#3f5a52", "#dfe8e3", "#d8cdb8"];
+          const bits = Array.from({ length: 110 }, () => ({
+            x: innerWidth / 2,
+            y: innerHeight * 0.7,
+            vx: (Math.random() - 0.5) * 14,
+            vy: -Math.random() * 16 - 4,
+            s: 4 + Math.random() * 6,
+            c: cols[(Math.random() * 4) | 0],
+          }));
+          let f = 0;
+          (function go() {
+            x.clearRect(0, 0, c.width, c.height);
+            bits.forEach((b) => {
+              b.x += b.vx;
+              b.y += b.vy;
+              b.vy += 0.45;
+              x.fillStyle = b.c;
+              x.fillRect(b.x, b.y, b.s, b.s);
+            });
+            if (++f < 110) requestAnimationFrame(go);
+            else c.remove();
+          })();
+        }
+      }
+
+      /** Chat-style contact form: asks one question at a time and validates each answer. */
+      class ChatForm {
+        #el;
+        #log;
+        #form;
+        #in;
+        #acts;
+        #v;
+        #steps;
+        #i = 0;
+        #data = {};
+        #send;
+        constructor(el, validator, onSend) {
+          this.#el = el;
+          this.#v = validator;
+          this.#send = onSend;
+          this.#log = $(".log", el);
+          this.#form = $("form", el);
+          this.#in = $("input", el);
+          this.#acts = $(".acts", el);
+          this.#steps = [
+            {
+              key: "name",
+              ask: () => "Hello! What's your name?",
+              type: "text",
+            },
+            {
+              key: "email",
+              ask: (d) => `Nice to meet you, ${d.name}! What's your email?`,
+              type: "email",
+            },
+            { key: "subject", ask: () => "What is this about?", type: "text" },
+            {
+              key: "message",
+              ask: () => "Great. Type your message (10–500 characters).",
+              type: "text",
+            },
+          ];
+          this.#form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            this.#answer();
+          });
+          this.start();
+        }
+        #add(text, cls) {
+          const b = document.createElement("div");
+          b.className = "b " + cls;
+          b.textContent = text;
+          this.#log.append(b);
+          this.#log.scrollTop = 1e6;
+          return b;
+        }
+        async #say(text, cls = "bot") {
+          const t = this.#add("", "bot dots");
+          t.innerHTML = "<span></span><span></span><span></span>";
+          await wait(reduce ? 0 : 450);
+          t.remove();
+          this.#add(text, cls);
+        }
+        start() {
+          this.#i = 0;
+          this.#data = {};
+          this.#log.innerHTML = "";
+          this.#acts.innerHTML = "";
+          this.#form.hidden = false;
+          this.#ask();
+        }
+        async #ask() {
+          const s = this.#steps[this.#i];
+          this.#in.type = s.type;
+          this.#in.value = "";
+          this.#in.placeholder = "Type here…";
+          await this.#say(s.ask(this.#data));
+          if (this.#i > 0) this.#in.focus({ preventScroll: true });
+        }
+        async #answer() {
+          const s = this.#steps[this.#i],
+            v = this.#in.value.trim(),
+            err = this.#v.check(s.key, v);
+          if (err) {
+            this.#add(v || "(empty)", "me");
+            this.#in.value = "";
+            return this.#say("⚠️ " + err, "bot bad");
+          }
+          this.#add(v, "me");
+          this.#data[s.key] = v;
+          this.#in.value = "";
+          if (++this.#i < this.#steps.length) return this.#ask();
+          this.#form.hidden = true;
+          await this.#say(`All set, ${this.#data.name}! Ready to send it?`);
+          this.#acts.innerHTML =
+            '<button class="btn" data-a="send">Send message</button><button class="btn ghost" data-a="redo">Start over ↺</button>';
+          this.#acts.onclick = async (e) => {
+            const a = e.target.dataset.a;
+            if (a === "redo") this.start();
+            if (a === "send") {
+              this.#acts.innerHTML = "";
+              Confetti.burst();
+              this.#send(this.#data);
+              await this.#say(
+                "Thank you! Your email app should open so you can press send.",
+              );
+            }
+          };
+        }
+      }
+
+      /* ===================== OOP: GALLERY ===================== */
+      /** One hobby photo. Private fields (encapsulation) and its own tile() HTML. */
+      class Hobby {
+        #title;
+        #caption;
+        constructor({ title, caption = "", image = "", icon = "✨", link = "" }, key) {
+          this.#title = title;
+          this.#caption = caption;
+          this.image = image;
+          this.icon = icon;
+          this.link = link;
+          this.key = key;
+        }
+        get title() {
+          return this.#title;
+        }
+        get caption() {
+          return this.#caption;
+        }
+        get src() {
+          return ImageStore.get(this.key) || this.image;
+        }
+        tile(i) {
+          return `<figure class="tile${i === 0 ? " on" : ""}" tabindex="0" role="button" data-open="${i}" aria-label="Open ${esc(this.#title)}">
+      ${this.src ? `<img src="${esc(this.src)}" alt="${esc(this.#title)}" loading="lazy">` : `<div class="ph">${this.icon}</div>`}
+      <figcaption><i class="no">${String(i + 1).padStart(2, "0")}</i><b>${esc(this.#title)}</b><span>${esc(this.#caption)}</span></figcaption>
+      <button class="upload" data-upload="${this.key}" data-w="1000">Change image</button></figure>`;
+        }
+      }
+
+      /** A polaroid-style photo card. POLYMORPHISM: overrides Hobby.tile() with its own look. */
+      class Snapshot extends Hobby {
+        tile(i) {
+          const src = this.src,
+            tilt = [-3, 2, -2, 3, -1, 2][i % 6];
+          return `<figure class="snap" style="--r:${tilt}deg"${src ? ` tabindex="0" role="button" data-snap="${i}"` : ""}>
+      <div class="snap-img">${src ? `<img src="${esc(src)}" alt="${esc(this.caption || this.title)}" loading="lazy">` : "<span><b>＋</b><br>Add photo</span>"}
+        <button class="upload" data-upload="${this.key}" data-w="800">Change photo</button></div>
+      <figcaption>${esc(this.caption || "Your caption")}</figcaption></figure>`;
+        }
+      }
+
+      /** Full-screen photo viewer: buttons, arrow keys, swipe, and Esc to close. */
+      class Lightbox {
+        #el;
+        #items;
+        #i = 0;
+        #x = 0;
+        constructor(items) {
+          this.#items = items;
+          const el = (this.#el = document.createElement("div"));
+          el.className = "lb";
+          el.hidden = true;
+          el.setAttribute("role", "dialog");
+          el.setAttribute("aria-modal", "true");
+          el.innerHTML =
+            '<button class="lb-x" aria-label="Close">✕</button><button class="lb-n prev" aria-label="Previous">‹</button><div class="lb-body"></div><button class="lb-n next" aria-label="Next">›</button>';
+          document.body.append(el);
+          el.addEventListener("click", (e) => {
+            if (
+              e.target.closest(".lb-x") ||
+              e.target === el ||
+              e.target.classList.contains("lb-body")
+            )
+              this.close();
+            if (e.target.closest(".prev")) this.go(-1);
+            if (e.target.closest(".next")) this.go(1);
+          });
+          el.addEventListener(
+            "touchstart",
+            (e) => (this.#x = e.touches[0].clientX),
+            { passive: true },
+          );
+          el.addEventListener("touchend", (e) => {
+            const d = e.changedTouches[0].clientX - this.#x;
+            if (Math.abs(d) > 50) this.go(d < 0 ? 1 : -1);
+          });
+          this.keys = (e) => {
+            if (el.hidden) return;
+            if (e.key === "Escape") this.close();
+            if (e.key === "ArrowLeft") this.go(-1);
+            if (e.key === "ArrowRight") this.go(1);
+          };
+          document.addEventListener("keydown", this.keys);
+        }
+        open(i) {
+          this.#i = i;
+          this.#show();
+          this.#el.hidden = false;
+          document.body.style.overflow = "hidden";
+          $(".lb-x", this.#el).focus();
+        }
+        close() {
+          this.#el.hidden = true;
+          document.body.style.overflow = "";
+        }
+        go(d) {
+          this.#i = (this.#i + d + this.#items.length) % this.#items.length;
+          this.#show();
+        }
+        #show() {
+    const h = this.#items[this.#i];
+    $(".lb-body", this.#el).innerHTML =
+    `${h.src ? `<img src="${esc(h.src)}" alt="${esc(h.title)}">` : `<div class="ph big">${h.icon}</div>`}<p><b>${esc(h.title)}</b><br>${esc(h.caption)}${h.link ? `<br><a class="lb-link" href="${esc(h.link)}" target="_blank" rel="noopener">Listen on Spotify ↗</a>` : ""}<small>${this.#i + 1} / ${this.#items.length}</small></p>`;
+}
+        destroy() {
+          document.removeEventListener("keydown", this.keys);
+          document.body.style.overflow = "";
+          this.#el.remove();
+        }
+      }
+
+      /* ===================== MAIN APP ===================== */
+      class PortfolioApp {
+        constructor(data) {
+          this.data = data;
+          this.student = new Student(data.name, data.title, data.education);
+          this.projects = data.projects.map(
+            (p, i) => new (PROJECT_TYPES[p.type] || Project)(p, "project" + i),
+          );
+          this.snaps = (data.fun?.photos || []).map(
+            (p, i) =>
+              new Snapshot(
+                {
+                  title: p.caption || "Snapshot",
+                  caption: p.caption || "",
+                  image: p.image || "",
+                  icon: "📷",
+                },
+                "snap" + i,
+              ),
+          );
+          this.hobbies = (data.hobbies || []).map(
+            (h, i) => new Hobby(h, "hobby" + i),
+          );
+          this.validator = new FormValidator({
+            name: [
+              [(v) => v.length > 0, "Please enter your name."],
+              [(v) => v.length >= 2, "Name needs at least 2 characters."],
+            ],
+            email: [
+              [(v) => v.length > 0, "Please enter your email."],
+              [
+                (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v),
+                "That email looks off. Try name@example.com.",
+              ],
+            ],
+            subject: [
+              [(v) => v.length >= 3, "Subject needs at least 3 characters."],
+            ],
+            message: [
+              [(v) => v.length >= 10, "Message needs at least 10 characters."],
+              [(v) => v.length <= 500, "Message is limited to 500 characters."],
+            ],
+          });
+          if (location.protocol === "file:" || location.hash === "#edit")
+            document.body.classList.add("edit");
+          this.#globalEvents();
+          this.render();
+        }
+
+        #homeHTML() {
+          const src = ImageStore.get("profile") || this.data.photo,
+            d = this.data;
+          return `<section id="home" class="hero"><div class="wrap">
+      <div><small><span class="wave">👋</span> Hello, I'm</small>
+        <h1 aria-label="${esc(this.student.name)}">${this.student.name
+          .split(" ")
+          .map(
+            (w) =>
+              `<span class="w" aria-hidden="true">${[...w].map((ch) => `<span>${esc(ch)}</span>`).join("")}</span>`,
+          )
+          .join(" ")}</h1>
+        <div class="role" aria-label="${esc(this.student.title)}"></div>
+        <p>${esc(d.welcome)}</p>
+        <div class="btns"><a class="btn" href="#projects">View my work</a><a class="btn ghost" href="#contact">Get in touch</a></div></div>
+      <div class="photo-wrap"><div class="photo" id="photo">${src ? `<img src="${esc(src)}" alt="Profile picture of ${esc(this.student.name)}">` : `<div class="initials">${esc(this.student.initials)}</div>`}
+        <button class="upload" data-upload="profile" data-w="700">Change photo</button></div>${(d.stickers || []).map((t) => `<span class="sticker">${esc(t)}</span>`).join("")}</div>
+    </div></section>`;
+        }
+
+        #aboutHTML() {
+          const d = this.data;
+          const panels = {
+            me: `<dl>${Object.entries(d.info)
+              .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`)
+              .join("")}</dl>`,
+            school: this.student.education
+              .map(
+                (e) =>
+                  `<div class="edu"><b>${esc(e.school)}</b>${esc(e.detail)}<br><span>${esc(e.level)} · ${esc(e.years)}</span></div>`,
+              )
+              .join(""),
+            skills: `<p class="hint">Skills</p><div class="tags">${d.skills.map((s) => `<span class="tag">${esc(s)}</span>`).join("")}</div>
+        <p class="hint" style="margin-top:20px">Interests</p><div class="tags">${d.interests.map((s) => `<span class="tag">${esc(s)}</span>`).join("")}</div>`,
+            fun: this.#funHTML(),
+          };
+          this.panels = panels;
+          return `<section id="about"><div class="wrap"><h2>Get to Know Me</h2><p class="hint">A few serious things, and a few fun ones.</p>
+      <div class="tabs" role="tablist"><button role="tab" data-tab="me" aria-selected="true">Me</button><button role="tab" data-tab="school" aria-selected="false">School</button><button role="tab" data-tab="skills" aria-selected="false">Skills</button><button role="tab" data-tab="fun" aria-selected="false">Fun</button></div>
+      <div class="panel" id="panel" role="tabpanel">${panels.me}</div></div></section>`;
+        }
+
+        /** The "Fun" tab: favorites plus polaroid-style photo cards. */
+        #funHTML() {
+          const f = this.data.fun || {};
+          return `<div class="fun">
+      <h3>My favorites</h3><div class="favs">${Object.entries(f.favorites || {})
+        .map(
+          ([k, v]) =>
+            `<div class="fav"><small>${esc(k)}</small><b>${esc(v)}</b></div>`,
+        )
+        .join("")}</div>
+      <h3>Snapshots</h3><p class="hint">Little moments I like.</p>
+      <div class="snaps">${this.snaps.map((s, i) => s.tile(i)).join("")}</div></div>`;
+        }
+
+        #projectsHTML() {
+          return `<section id="projects"><div class="wrap"><h2>Projects</h2><div class="grid">${this.projects.map((p) => p.render()).join("")}</div></div></section>`;
+        }
+
+        #galleryHTML() {
+          return `<section id="gallery"><div class="wrap"><h2>Hobbies Gallery</h2><p class="hint">Hover or tap a photo to open it up. Tap it again to see it full screen.</p>
+      <div class="gallery">${this.hobbies.map((h, i) => h.tile(i)).join("")}</div></div></section>`;
+        }
+
+        /** Expands a gallery panel; if it is already open, shows it full screen. */
+        #pick(tile) {
+          if (tile.classList.contains("on"))
+            return this.lightbox.open(+tile.dataset.open);
+          tile.parentElement
+            .querySelectorAll(".tile")
+            .forEach((t) => t.classList.toggle("on", t === tile));
+        }
+
+        #contactHTML() {
+          const c = this.data.contact;
+          return `<section id="contact"><div class="wrap"><h2>Contact Me</h2>
+      <div class="info"><div>✉️ <a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div><div>📞 ${esc(c.phone)}</div><div>📍 ${esc(c.location)}</div></div>
+      <div class="chat" id="chat"><div class="log" aria-live="polite"></div>
+        <form class="row" novalidate><input aria-label="Your answer" autocomplete="off"><button class="btn send" aria-label="Send answer">➤</button></form><div class="acts"></div></div></div></section>`;
+        }
+
+        /** Listeners attached once for the whole page (delegation). */
+        #globalEvents() {
+          document.addEventListener("click", async (e) => {
+            const up = e.target.closest("[data-upload]");
+            if (up) {
+              e.stopPropagation();
+              const img = await ImageStore.pick(+up.dataset.w);
+              ImageStore.set(up.dataset.upload, img);
+              return this.render();
+            }
+            const tab = e.target.closest("[data-tab]");
+            if (tab) {
+              document
+                .querySelectorAll("[data-tab]")
+                .forEach((b) => b.setAttribute("aria-selected", b === tab));
+              const p = $("#panel");
+              p.innerHTML = this.panels[tab.dataset.tab];
+              p.style.animation = "none";
+              p.offsetHeight;
+              p.style.animation = "";
+            }
+            const sn = e.target.closest("[data-snap]");
+            if (sn) this.snapBox.open(+sn.dataset.snap);
+            const tile = e.target.closest("[data-open]");
+            if (tile) this.#pick(tile);
+            const card = e.target.closest(".card");
+            if (card && !e.target.closest("a"))
+              card.classList.toggle("flipped");
+          });
+          document.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            const c = e.target.closest?.(".card"),
+              t = e.target.closest?.("[data-open]");
+            if (c) {
+              e.preventDefault();
+              c.classList.toggle("flipped");
+            }
+            const sn = e.target.closest?.("[data-snap]");
+            if (sn) {
+              e.preventDefault();
+              this.snapBox.open(+sn.dataset.snap);
+            }
+            if (t) {
+              e.preventDefault();
+              this.#pick(t);
+            }
+          });
+          // Mouse users: hovering a panel expands it
+          document.addEventListener("pointerover", (e) => {
+            if (e.pointerType !== "mouse") return;
+            const t = e.target.closest?.(".tile");
+            if (t && !t.classList.contains("on")) this.#pick(t);
+          });
+          addEventListener(
+            "scroll",
+            () => {
+              $("#bar").style.width =
+                (scrollY /
+                  (document.documentElement.scrollHeight - innerHeight)) *
+                  100 +
+                "%";
+            },
+            { passive: true },
+          );
+        }
+
+        /** 3D tilt on the profile photo (mouse or touch drag). */
+        #tilt(el) {
+          el.addEventListener("pointermove", (e) => {
+            const r = el.getBoundingClientRect(),
+              x = (e.clientX - r.left) / r.width - 0.5,
+              y = (e.clientY - r.top) / r.height - 0.5;
+            el.style.transform = `perspective(700px) rotateY(${x * 20}deg) rotateX(${-y * 20}deg)`;
+          });
+          ["pointerleave", "pointerup"].forEach((ev) =>
+            el.addEventListener(ev, () => (el.style.transform = "")),
+          );
+        }
+
+        render() {
+          this.type?.stop();
+          this.lightbox?.destroy();
+          this.snapBox?.destroy();
+          $("#app").innerHTML =
+            this.#homeHTML() +
+            this.#aboutHTML() +
+            this.#projectsHTML() +
+            this.#galleryHTML() +
+            this.#contactHTML();
+          $("#footer").textContent =
+            `© ${new Date().getFullYear()} ${this.student.name}`;
+          document.title = this.data.tabTitle || this.student.name;
+          this.type = new Typewriter(
+            $(".role"),
+            this.data.roles?.length ? this.data.roles : [this.student.title],
+          );
+          this.#tilt($("#photo"));
+          this.lightbox = new Lightbox(this.hobbies);
+          this.snapBox = new Lightbox(this.snaps);
+          new ChatForm($("#chat"), this.validator, (d) => {
+            const c = this.data.contact.email;
+            location.href = `mailto:${c}?subject=${encodeURIComponent(d.subject)}&body=${encodeURIComponent(d.message + "\n\n— " + d.name + " (" + d.email + ")")}`;
+          });
+          // Highlight current section in the dock
+          const links = [...document.querySelectorAll("#dock a")];
+          const io = new IntersectionObserver(
+            (es) =>
+              es.forEach(
+                (en) =>
+                  en.isIntersecting &&
+                  links.forEach((a) =>
+                    a.classList.toggle("active", a.hash === "#" + en.target.id),
+                  ),
+              ),
+            { rootMargin: "-45% 0px -50% 0px" },
+          );
+          document
+            .querySelectorAll("main section")
+            .forEach((s) => io.observe(s));
+        }
+      }
+
+      new PortfolioApp(PROFILE);
+    </script>
+  </body>
+</html>
